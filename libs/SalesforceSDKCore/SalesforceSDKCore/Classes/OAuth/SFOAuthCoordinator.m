@@ -270,10 +270,14 @@
 
 - (WKWebView *)view {
     if (_view == nil) {
+        CGRect viewBounds = [UIScreen mainScreen].bounds;
+        NSString* javascript = @"document.getElementById('footer').innerHTML = '';";
+        WKUserScript* userScript = [[WKUserScript alloc] initWithSource:javascript injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:NO];
+        WKUserContentController* userContentController = [[WKUserContentController alloc] init];
+        [userContentController addUserScript:userScript];
         WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
         config.processPool = SFSDKWebViewStateManager.sharedProcessPool;
-        UIWindowScene *scene = (UIWindowScene *)self.authSession.oauthRequest.scene;
-        CGRect viewBounds = scene? scene.coordinateSpace.bounds : [UIScreen mainScreen].bounds;
+        config.userContentController = userContentController;
         _view = [[WKWebView alloc] initWithFrame:viewBounds configuration:config];
         _view.navigationDelegate = self;
         _view.autoresizesSubviews = YES;
