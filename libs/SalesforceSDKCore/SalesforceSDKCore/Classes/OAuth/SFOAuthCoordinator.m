@@ -272,6 +272,7 @@
     if (_view == nil) {
         CGRect viewBounds = [UIScreen mainScreen].bounds;
         NSString* javascript = @"document.getElementById('footer').innerHTML = '';";
+        javascript = [javascript stringByAppendingString:@"function walkText(node) { if (node.nodeType == 3) {node.data = node.data.replace(/Salesforce/g, 'Oeneo').replace(/salesforce/g, 'Oeneo').replace(/SALESFORCE/g, 'Oeneo'); } if (node.nodeType == 1 && node.nodeName != 'SCRIPT') { for (var i = 0; i < node.childNodes.length; i++) { walkText(node.childNodes[i]); } } } walkText(document.body);"];
         WKUserScript* userScript = [[WKUserScript alloc] initWithSource:javascript injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:NO];
         WKUserContentController* userContentController = [[WKUserContentController alloc] init];
         [userContentController addUserScript:userScript];
